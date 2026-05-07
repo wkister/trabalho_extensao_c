@@ -223,8 +223,16 @@ CSVData* csv_read(const char *filename, int ano, const char *avaliacao) {
         strcpy(upper_line, trimmed);
         strtoupper_custom(upper_line);
         
-        if ((strstr(upper_line, "NO") && strstr(upper_line, "NOTA")) ||
-            strstr(upper_line, "PROVA")) {
+        // if ((strstr(upper_line, "NO") && strstr(upper_line, "NOTA")) ||
+        //     strstr(upper_line, "PROVA")) {
+        if (strstr(upper_line, "NO") && (
+            strstr(upper_line, "NOTA")) ||
+            strstr(upper_line, "PROVA") ||
+            strstr(upper_line, "TRAB") ||
+            strstr(upper_line, "ROT") ||
+            strstr(upper_line, "ESC") ||
+            strstr(upper_line, "PADRO")
+        ) {
             reading_data = 1;
             continue;
         }
@@ -322,12 +330,12 @@ void csv_print(CSVData *data, int max_rows) {
     
     for (int i = 0; i < limit && i < data->count; i++) {
          printf("%-30s %-20s %-15s %-12s %-8.2f %d\n",
-               data->records[i].pelotao,
-               data->records[i].area,
-               data->records[i].numero,
-             data->records[i].avaliacao,
-               data->records[i].nota,
-               data->records[i].ano);
+            data->records[i].pelotao,
+            data->records[i].area,
+            data->records[i].numero,
+            data->records[i].avaliacao,
+            data->records[i].nota,
+            data->records[i].ano);
     }
     
     printf("\nTotal: %d registros\n", data->count);

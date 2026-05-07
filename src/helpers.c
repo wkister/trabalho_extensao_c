@@ -5,7 +5,7 @@
 #include <math.h>
 
 #define AVALIACOES_COUNT 5
-const char *avaliacoes[] = {"av1", "av2", "trabalho", "av3", "av4"};
+const char *avaliacoes[] = {"trabalho", "av1", "av2", "av3", "av4"};
 
 /**
  * Carrega todos os dados de um ano específico

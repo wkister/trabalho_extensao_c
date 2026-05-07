@@ -3,6 +3,7 @@
 #include <string.h>
 #include "csv_reader.h"
 #include "helpers.h"
+#include "pivot.h"
 
 #define MAX_YEARS 10
 
@@ -76,6 +77,14 @@ int main(int argc, char *argv[]) {
         // Imprime primeiros 20 registros
         // csv_print(all_data, 20);
         csv_print(all_data, total_records);
+
+        PivotTable *pivot = pivot_from_csv(all_data);
+        if (pivot) {
+            pivot_print(pivot, 0);
+            pivot_free(pivot);
+        } else {
+            fprintf(stderr, "Erro: falha ao gerar pivot\n");
+        }
 
         exit(0);
         

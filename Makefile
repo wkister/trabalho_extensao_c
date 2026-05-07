@@ -6,7 +6,7 @@ SRC_DIR = src
 OBJ_DIR = obj
 BIN_DIR = .
 
-SOURCES = $(SRC_DIR)/main.c $(SRC_DIR)/csv_reader.c $(SRC_DIR)/helpers.c
+SOURCES = $(SRC_DIR)/main.c $(SRC_DIR)/csv_reader.c $(SRC_DIR)/helpers.c $(SRC_DIR)/pivot.c
 OBJECTS = $(SOURCES:$(SRC_DIR)/%.c=$(OBJ_DIR)/%.o)
 EXEC = analise_dados
 
