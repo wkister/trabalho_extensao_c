@@ -2,60 +2,116 @@
 #include <stdlib.h>
 #include <string.h>
 #include "csv_reader.h"
+#include "helpers.h"
+
+#define MAX_YEARS 10
 
 /**
  * Programa principal - Análise de Dados EAMES em C
  * Carrega arquivos CSV no formato EAMES e realiza análises estatísticas
  */
 
+void print_usage(const char *program_name) {
+    printf("Uso: %s [ANOS]\n", program_name);
+    printf("\nPar\u00e2metros:\n");
+    printf("  ANOS - Anos a analisar (opcional)\n");
+    printf("    Se omitido: analisa todos os anos (2020-2025)\n");
+    printf("    Single: %s 2022\n", program_name);
+    printf("    M\u00faltiplos: %s 2020,2022,2024\n", program_name);
+    printf("    Intervalo: %s 2020-2023\n", program_name);
+}
+
 int main(int argc, char *argv[]) {
     printf("========================================\n");
-    printf("Análise de Dados EAMES - Versão C\n");
+    printf("An\u00e1lise de Dados EAMES - Vers\u00e3o C\n");
     printf("========================================\n\n");
     
-    // Se passou argumentos, tenta carregar arquivo
-    if (argc < 2) {
-        printf("Uso: %s <arquivo_csv> [ano] [avaliacao]\n", argv[0]);
-        printf("\nExemplos:\n");
-        printf("  %s dados/2022/av1.csv 2022 av1\n", argv[0]);
-        printf("  %s dados/2022/av2.csv 2022 av2\n", argv[0]);
-        printf("\nFormatos suportados:\n");
-        printf("  - Arquivos EAMES (pelotão/área + número + nota)\n");
-        printf("  - Notas com vírgula decimal (ex: 7,5)\n");
-        printf("  - Avaliações: av1, av2, trabalho, av3, av4\n\n");
-        return 1;
-    }
+    int years[MAX_YEARS];
+    int years_count = 0;
     
-    const char *filename = argv[1];
-    int ano = (argc > 2) ? atoi(argv[2]) : 2022;
-    const char *avaliacao = (argc > 3) ? argv[3] : "av1";
-    
-    printf("Carregando arquivo: %s\n", filename);
-    printf("  Ano: %d\n", ano);
-    printf("  Avaliação: %s\n\n", avaliacao);
-    
-    // Carrega dados
-    CSVData *data = csv_read(filename, ano, avaliacao);
-    
-    if (!data) {
-        fprintf(stderr, "Erro: falha ao carregar arquivo\n");
-        return 1;
-    }
-    
-    int count = csv_count(data);
-    printf("Registros carregados: %d\n\n", count);
-    
-    if (count > 0) {
-        // Imprime primeiros 10 registros
-        csv_print(data, 10);
+    // Parse de anos
+    if (argc > 1) {
+        years_count = parse_year_argument(argv[1], years, MAX_YEARS);
+        if (years_count == 0) {
+            fprintf(stderr, "Erro: argumento de ano inv\u00e1lido: %s\n", argv[1]);
+            print_usage(argv[0]);
+            return 1;
+        }
     } else {
-        printf("Nenhum registro encontrado no arquivo.\n");
+        // Padr\u00e3o: todos os anos de 2020 a 2025
+        for (int i = 0; i < 6; i++) {
+            years[i] = 2020 + i;
+        }
+        years_count = 6;
+    }
+    
+    printf("Anos a analisar: ");
+    for (int i = 0; i < years_count; i++) {
+        printf("%d%s", years[i], (i < years_count - 1) ? ", " : "\n");
+    }
+    printf("\n");
+    
+    // Cria estrutura para dados combinados
+    CSVData *all_data = csv_create();
+    if (!all_data) {
+        fprintf(stderr, "Erro: falha ao criar estrutura de dados\n");
+        return 1;
+    }
+    
+    // Carrega dados de todos os anos
+    int total_records = 0;
+    for (int i = 0; i < years_count; i++) {
+        int loaded = load_year_data(years[i], all_data);
+        printf("Ano %d: %d registros carregados\n", years[i], loaded);
+        total_records += loaded;
+    }
+    
+    printf("\nTotal de registros: %d\n\n", total_records);
+    
+    if (total_records > 0) {
+        // Imprime primeiros 20 registros
+        csv_print(all_data, 20);
+        
+        // Calcula e imprime estatísticas básicas
+        printf("\n========== ESTATÍSTICAS ==========\n");
+        
+        double *av1_values = malloc(total_records * sizeof(double));
+        double *av2_values = malloc(total_records * sizeof(double));
+        
+        if (av1_values && av2_values) {
+            int av1_count = extract_column(all_data, "av1", av1_values);
+            int av2_count = extract_column(all_data, "av2", av2_values);
+            
+            if (av1_count > 0) {
+                double mean_av1 = calculate_mean(av1_values, av1_count);
+                double std_av1 = calculate_std_dev(av1_values, av1_count, mean_av1);
+                printf("\nAV1:\n");
+                printf("  Média: %.2f\n", mean_av1);
+                printf("  Desvio padrão: %.2f\n", std_av1);
+                printf("  Registros: %d\n", av1_count);
+            }
+            
+            if (av2_count > 0) {
+                double mean_av2 = calculate_mean(av2_values, av2_count);
+                double std_av2 = calculate_std_dev(av2_values, av2_count, mean_av2);
+                printf("\nAV2:\n");
+                printf("  Média: %.2f\n", mean_av2);
+                printf("  Desvio padrão: %.2f\n", std_av2);
+                printf("  Registros: %d\n", av2_count);
+            }
+            
+            free(av1_values);
+            free(av2_values);
+        }
+    } else {
+        printf("Nenhum registro encontrado nos arquivos.\n");
     }
     
     // Libera memória
-    csv_free(data);
+    csv_free(all_data);
     
     printf("\nPrograma finalizado com sucesso.\n");
     return 0;
 }
+
 
