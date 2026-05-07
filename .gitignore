@@ -1,0 +1,14 @@
+*.o
+*.a
+*.so
+analise_dados
+*.exe
+.DS_Store
+*.swp
+*.swo
+*~
+build/
+dist/
+*.dSYM/
+.vscode/
+.idea/
