@@ -225,14 +225,17 @@ CSVData* csv_read(const char *filename, int ano, const char *avaliacao) {
         
         // if ((strstr(upper_line, "NO") && strstr(upper_line, "NOTA")) ||
         //     strstr(upper_line, "PROVA")) {
-        if (strstr(upper_line, "NO") && (
-            strstr(upper_line, "NOTA")) ||
-            strstr(upper_line, "PROVA") ||
-            strstr(upper_line, "TRAB") ||
-            strstr(upper_line, "ROT") ||
-            strstr(upper_line, "ESC") ||
-            strstr(upper_line, "PADRO")
-        ) {
+        int has_num_col = (strstr(upper_line, "NO") != NULL) ||
+                          (strstr(upper_line, "NUM") != NULL) ||
+                          (upper_line[0] == 'N' && strchr(upper_line, ',') != NULL);
+        int has_grade_col = (strstr(upper_line, "NOTA") != NULL) ||
+                            (strstr(upper_line, "PROVA") != NULL) ||
+                            (strstr(upper_line, "TRAB") != NULL) ||
+                            (strstr(upper_line, "ROT") != NULL) ||
+                            (strstr(upper_line, "ESC") != NULL) ||
+                            (strstr(upper_line, "PADRO") != NULL);
+
+        if (has_num_col && has_grade_col) {
             reading_data = 1;
             continue;
         }

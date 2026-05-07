@@ -61,7 +61,25 @@ static void init_row(PivotRow *row, const StudentRecord *record) {
     row->trabalho = PIVOT_EMPTY_GRADE;
     row->av3 = PIVOT_EMPTY_GRADE;
     row->av4 = PIVOT_EMPTY_GRADE;
+    row->nf_mati = PIVOT_EMPTY_GRADE;
+    row->nf_matii = PIVOT_EMPTY_GRADE;
     row->ano = record->ano;
+}
+
+static void update_final_grades(PivotRow *row) {
+    if (!row) return;
+
+    if (row->av1 >= 0.0 && row->av2 >= 0.0 && row->trabalho >= 0.0) {
+        row->nf_mati = (row->av1 + row->av2 + row->trabalho) / 2.0;
+    } else {
+        row->nf_mati = PIVOT_EMPTY_GRADE;
+    }
+
+    if (row->av3 >= 0.0 && row->av4 >= 0.0) {
+        row->nf_matii = (row->av3 + row->av4) / 2.0;
+    } else {
+        row->nf_matii = PIVOT_EMPTY_GRADE;
+    }
 }
 
 static void set_grade_by_avaliacao(PivotRow *row, const char *avaliacao, double nota) {
@@ -136,6 +154,7 @@ PivotTable* pivot_from_csv(const CSVData *data) {
         }
 
         set_grade_by_avaliacao(&table->rows[index], record->avaliacao, record->nota);
+        update_final_grades(&table->rows[index]);
     }
 
     return table;
@@ -157,10 +176,10 @@ void pivot_print(const PivotTable *table, int max_rows) {
 
     int limit = (max_rows > 0 && max_rows < table->count) ? max_rows : table->count;
 
-    printf("\n======================= PIVOT POR ALUNO =======================\n");
-    printf("%-15s %-30s %-18s %-10s %-10s %-10s %-10s %-10s %-6s\n",
-           "NUMERO", "PELOTAO", "AREA", "AV1", "AV2", "TRABALHO", "AV3", "AV4", "ANO");
-    printf("---------------------------------------------------------------------------------------------------------------\n");
+        printf("\n============================= PIVOT POR ALUNO =============================\n");
+        printf("%-15s %-30s %-18s %-10s %-10s %-10s %-10s %-10s %-10s %-10s %-6s\n",
+            "NUMERO", "PELOTAO", "AREA", "AV1", "AV2", "TRABALHO", "AV3", "AV4", "NF_MATI", "NF_MATII", "ANO");
+        printf("-------------------------------------------------------------------------------------------------------------------------------\n");
 
     for (int i = 0; i < limit; i++) {
         const PivotRow *row = &table->rows[i];
@@ -171,6 +190,8 @@ void pivot_print(const PivotTable *table, int max_rows) {
         print_grade(row->trabalho);
         print_grade(row->av3);
         print_grade(row->av4);
+        print_grade(row->nf_mati);
+        print_grade(row->nf_matii);
         printf("%-6d\n", row->ano);
     }
 

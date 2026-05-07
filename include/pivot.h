@@ -14,6 +14,8 @@ typedef struct {
     double trabalho;
     double av3;
     double av4;
+    double nf_mati;
+    double nf_matii;
     int ano;
 } PivotRow;
 
@@ -36,7 +38,7 @@ void pivot_free(PivotTable *table);
 /**
  * Constrói uma tabela pivot no formato:
  * indice principal: numero do aluno
- * colunas: PELOTAO, AREA, AV1, AV2, TRABALHO, AV3, AV4, ANO
+ * colunas: PELOTAO, AREA, AV1, AV2, TRABALHO, AV3, AV4, NF_MATI, NF_MATII, ANO
  */
 PivotTable* pivot_from_csv(const CSVData *data);
 
