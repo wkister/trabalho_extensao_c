@@ -23,7 +23,7 @@ void print_usage(const char *program_name) {
 
 int main(int argc, char *argv[]) {
     printf("========================================\n");
-    printf("An\u00e1lise de Dados EAMES - Vers\u00e3o C\n");
+    printf("An\u00e1lise de Dados EAMES - Versão C\n");
     printf("========================================\n\n");
     
     int years[MAX_YEARS];
@@ -38,11 +38,13 @@ int main(int argc, char *argv[]) {
             return 1;
         }
     } else {
-        // Padr\u00e3o: todos os anos de 2020 a 2025
-        for (int i = 0; i < 6; i++) {
-            years[i] = 2020 + i;
-        }
-        years_count = 6;
+        // Padrão: todos os anos de 2020 a 2025
+        // for (int i = 0; i < 6; i++) {
+        //     years[i] = 2020 + i;
+        // }
+        // years_count = 6;
+        years[0] = 2020;
+        years_count = 1;
     }
     
     printf("Anos a analisar: ");
@@ -67,10 +69,15 @@ int main(int argc, char *argv[]) {
     }
     
     printf("\nTotal de registros: %d\n\n", total_records);
+
+    // exit(0);
     
     if (total_records > 0) {
         // Imprime primeiros 20 registros
-        csv_print(all_data, 20);
+        // csv_print(all_data, 20);
+        csv_print(all_data, total_records);
+
+        exit(0);
         
         // Calcula e imprime estatísticas básicas
         printf("\n========== ESTATÍSTICAS ==========\n");

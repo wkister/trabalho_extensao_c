@@ -313,18 +313,19 @@ void csv_print(CSVData *data, int max_rows) {
         return;
     }
     
-    printf("\n========== DADOS CSV ==========\n");
-    printf("%-30s %-20s %-15s %-8s %s\n", 
-           "PELOTÃO", "ÁREA", "Nº", "NOTA", "ANO");
-    printf("-----------------------------------------------------\n");
+        printf("\n========== DADOS CSV ==========\n");
+        printf("%-30s %-20s %-15s %-12s %-8s %s\n",
+            "PELOTÃO", "ÁREA", "Nº", "AVALIAÇÃO", "NOTA", "ANO");
+        printf("-----------------------------------------------------------------------\n");
     
     int limit = max_rows > 0 ? max_rows : data->count;
     
     for (int i = 0; i < limit && i < data->count; i++) {
-        printf("%-30s %-20s %-15s %-8.2f %d\n",
+         printf("%-30s %-20s %-15s %-12s %-8.2f %d\n",
                data->records[i].pelotao,
                data->records[i].area,
                data->records[i].numero,
+             data->records[i].avaliacao,
                data->records[i].nota,
                data->records[i].ano);
     }
