@@ -4,6 +4,7 @@
 #include "csv_reader.h"
 #include "helpers.h"
 #include "pivot.h"
+#include "statistics.h"
 
 #define MAX_YEARS 10
 
@@ -76,11 +77,23 @@ int main(int argc, char *argv[]) {
     if (total_records > 0) {
         // Imprime primeiros 20 registros
         // csv_print(all_data, 20);
-        csv_print(all_data, total_records);
+        // csv_print(all_data, total_records);
 
         PivotTable *pivot = pivot_from_csv(all_data);
         if (pivot) {
-            pivot_print(pivot, 0);
+            // pivot_print(pivot, 0);
+
+            double corr_av1_nf_matii = 0.0;
+            int pairs = 0;
+            if (stats_correlation_av1_nf_matii(pivot, &corr_av1_nf_matii, &pairs) == 0) {
+                printf("\n========== CORRELAÇÃO ==========" "\n");
+                printf("Correlação de Pearson (AV1 x NF_MATII): %.4f\n", corr_av1_nf_matii);
+                printf("Pares válidos usados: %d\n", pairs);
+            } else {
+                printf("\n========== CORRELAÇÃO ==========" "\n");
+                printf("Não foi possível calcular AV1 x NF_MATII (pares válidos insuficientes).\n");
+            }
+
             pivot_free(pivot);
         } else {
             fprintf(stderr, "Erro: falha ao gerar pivot\n");
