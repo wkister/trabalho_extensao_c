@@ -45,3 +45,16 @@ int stats_correlation_av1_nf_matii(const PivotTable *table, double *correlation,
     *correlation = numerator / sqrt(denominator_left * denominator_right);
     return 0;
 }
+
+const char *stats_classify_correlation(double r) {
+    double a = fabs(r);
+    if (a < 0.3) {
+        return "fraca";
+    } else if (a < 0.6) {
+        return "moderada";
+    } else if (a < 0.9) {
+        return "forte";
+    } else {
+        return "muito forte";
+    }
+}

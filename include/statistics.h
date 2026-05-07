@@ -13,4 +13,10 @@
  */
 int stats_correlation_av1_nf_matii(const PivotTable *table, double *correlation, int *pair_count);
 
+/**
+ * Classifica a intensidade da correlação de Pearson.
+ * Retorna uma string literal em português: "fraca", "moderada", "forte", "muito forte".
+ */
+const char *stats_classify_correlation(double r);
+
 #endif // STATISTICS_H

@@ -89,6 +89,10 @@ int main(int argc, char *argv[]) {
                 printf("\n========== CORRELAÇÃO ==========" "\n");
                 printf("Correlação de Pearson (AV1 x NF_MATII): %.4f\n", corr_av1_nf_matii);
                 printf("Pares válidos usados: %d\n", pairs);
+                const char *corr_class = stats_classify_correlation(corr_av1_nf_matii);
+                if (corr_class) {
+                    printf("Classificação da correlação: %s\n", corr_class);
+                }
             } else {
                 printf("\n========== CORRELAÇÃO ==========" "\n");
                 printf("Não foi possível calcular AV1 x NF_MATII (pares válidos insuficientes).\n");
