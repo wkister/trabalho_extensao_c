@@ -45,7 +45,7 @@ int main(int argc, char *argv[]) {
         //     years[i] = 2020 + i;
         // }
         // years_count = 6;
-        years[0] = 2020;
+        years[0] = 2023;
         years_count = 1;
     }
     
@@ -77,11 +77,11 @@ int main(int argc, char *argv[]) {
     if (total_records > 0) {
         // Imprime primeiros 20 registros
         // csv_print(all_data, 20);
-        // csv_print(all_data, total_records);
+        csv_print(all_data, total_records);
 
         PivotTable *pivot = pivot_from_csv(all_data);
         if (pivot) {
-            // pivot_print(pivot, 0);
+            pivot_print(pivot, 0);
 
             double corr_av1_nf_matii = 0.0;
             int pairs = 0;
@@ -103,39 +103,39 @@ int main(int argc, char *argv[]) {
             fprintf(stderr, "Erro: falha ao gerar pivot\n");
         }
 
-        exit(0);
+        // exit(0);
         
         // Calcula e imprime estatísticas básicas
-        printf("\n========== ESTATÍSTICAS ==========\n");
+        // printf("\n========== ESTATÍSTICAS ==========\n");
         
-        double *av1_values = malloc(total_records * sizeof(double));
-        double *av2_values = malloc(total_records * sizeof(double));
+        // double *av1_values = malloc(total_records * sizeof(double));
+        // double *av2_values = malloc(total_records * sizeof(double));
         
-        if (av1_values && av2_values) {
-            int av1_count = extract_column(all_data, "av1", av1_values);
-            int av2_count = extract_column(all_data, "av2", av2_values);
+        // if (av1_values && av2_values) {
+        //     int av1_count = extract_column(all_data, "av1", av1_values);
+        //     int av2_count = extract_column(all_data, "av2", av2_values);
             
-            if (av1_count > 0) {
-                double mean_av1 = calculate_mean(av1_values, av1_count);
-                double std_av1 = calculate_std_dev(av1_values, av1_count, mean_av1);
-                printf("\nAV1:\n");
-                printf("  Média: %.2f\n", mean_av1);
-                printf("  Desvio padrão: %.2f\n", std_av1);
-                printf("  Registros: %d\n", av1_count);
-            }
+        //     if (av1_count > 0) {
+        //         double mean_av1 = calculate_mean(av1_values, av1_count);
+        //         double std_av1 = calculate_std_dev(av1_values, av1_count, mean_av1);
+        //         printf("\nAV1:\n");
+        //         printf("  Média: %.2f\n", mean_av1);
+        //         printf("  Desvio padrão: %.2f\n", std_av1);
+        //         printf("  Registros: %d\n", av1_count);
+        //     }
             
-            if (av2_count > 0) {
-                double mean_av2 = calculate_mean(av2_values, av2_count);
-                double std_av2 = calculate_std_dev(av2_values, av2_count, mean_av2);
-                printf("\nAV2:\n");
-                printf("  Média: %.2f\n", mean_av2);
-                printf("  Desvio padrão: %.2f\n", std_av2);
-                printf("  Registros: %d\n", av2_count);
-            }
+        //     if (av2_count > 0) {
+        //         double mean_av2 = calculate_mean(av2_values, av2_count);
+        //         double std_av2 = calculate_std_dev(av2_values, av2_count, mean_av2);
+        //         printf("\nAV2:\n");
+        //         printf("  Média: %.2f\n", mean_av2);
+        //         printf("  Desvio padrão: %.2f\n", std_av2);
+        //         printf("  Registros: %d\n", av2_count);
+        //     }
             
-            free(av1_values);
-            free(av2_values);
-        }
+        //     free(av1_values);
+        //     free(av2_values);
+        // }
     } else {
         printf("Nenhum registro encontrado nos arquivos.\n");
     }
