@@ -1,0 +1,64 @@
+.
+├── analise_dados
+├── arvore.txt
+├── dados
+│   ├── 2020
+│   │   ├── av1.csv
+│   │   ├── av2.csv
+│   │   ├── av3.csv
+│   │   ├── av4.csv
+│   │   └── trabalho.csv
+│   ├── 2021
+│   │   ├── av1.csv
+│   │   ├── av2.csv
+│   │   ├── av3.csv
+│   │   ├── av4.csv
+│   │   └── trabalho.csv
+│   ├── 2022
+│   │   ├── av1.csv
+│   │   ├── av2.csv
+│   │   ├── av3.csv
+│   │   ├── av4.csv
+│   │   └── trabalho.csv
+│   ├── 2023
+│   │   ├── av1.csv
+│   │   ├── av2.csv
+│   │   ├── av3.csv
+│   │   ├── av4.csv
+│   │   └── trabalho.csv
+│   ├── 2024
+│   │   ├── av1.csv
+│   │   ├── av2.csv
+│   │   ├── av3.csv
+│   │   ├── av4.csv
+│   │   └── trabalho.csv
+│   └── 2025
+│       ├── av1.csv
+│       ├── av2.csv
+│       ├── av3.csv
+│       ├── av4.csv
+│       └── trabalho.csv
+├── graficos
+├── include
+│   ├── csv_reader.h
+│   ├── helpers.h
+│   ├── pivot.h
+│   └── statistics.h
+├── Makefile
+├── obj
+│   ├── csv_reader.o
+│   ├── helpers.o
+│   ├── main.o
+│   ├── pivot.o
+│   └── statistics.o
+├── README.md
+├── resultados
+├── src
+│   ├── csv_reader.c
+│   ├── helpers.c
+│   ├── main.c
+│   ├── pivot.c
+│   └── statistics.c
+└── USAGE.md
+
+13 directories, 49 files
