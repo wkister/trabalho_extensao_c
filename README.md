@@ -1,94 +1,106 @@
 # Análise de Dados EAMES em C
 
-API em C para leitura e análise de arquivos CSV no formato EAMES, com foco em cálculo de correlação entre disciplinas.
+Aplicação em C para leitura de arquivos CSV da EAMES, consolidação dos dados em pivot por aluno e cálculo de correlação entre `AV1` e `NF_MATII`.
 
-## Objetivo
+## O que o programa faz hoje
 
-Implementar em linguagem C uma solução de análise de dados estatísticos baseado no trabalho realizado em Python, permitindo:
-- Leitura eficiente de arquivos CSV no formato EAMES
-- Cálculo de estatísticas descritivas
-- Análise de correlação de Pearson entre disciplinas (MAT I e MAT II)
-- Geração de arquivos de resultado para visualização
+- Carrega dados por ano a partir de `dados/<ano>/{trabalho,av1,av2,av3,av4}.csv`
+- Mostra no terminal qual avaliação está sendo lida e quantos registros foram carregados
+- Consolida em tabela pivot por aluno (chave: `numero + ano`)
+- Calcula notas finais:
+	- `NF_MATI = (AV1 + AV2 + TRABALHO) / 2`
+	- `NF_MATII = (AV3 + AV4) / 2`
+- Calcula correlação de Pearson entre `AV1` e `NF_MATII`
+- Classifica a intensidade da correlação (`fraca`, `moderada`, `forte`, `muito forte`)
 
-## Estrutura do Projeto
+## Estrutura atual
 
 ```
 trabalho_extensao_c/
-│
-├── src/
-│   ├── main.c              # Programa principal
-│   ├── csv_reader.c        # Leitura de CSV no formato EAMES
-│   ├── statistics.c        # Cálculos estatísticos (média, desvio padrão, etc)
-│   ├── correlation.c       # Correlação de Pearson
-│   └── output.c            # Geração de arquivos de saída
-│
 ├── include/
-│   ├── csv_reader.h        # Interface para leitura de CSV
-│   ├── statistics.h        # Interface para cálculos estatísticos
-│   ├── correlation.h       # Interface para correlação
-│   └── output.h            # Interface para geração de saída
-│
-├── dados/                  # Dados originais (CSVs da EAMES)
-├── resultados/             # Arquivos gerados pelo programa
-│   ├── medias_anuais.csv   # Para gráficos de série temporal
-│   ├── correlacoes.csv     # Para gráficos de correlação
-│   ├── taxa_conclusao.csv  # Para gráfico de evasão
-│   └── dispersao.csv       # Dados para gráfico de dispersão
-│
-├── graficos/               # Gráficos gerados (por Python/gnuplot)
-├── README.md
+│   ├── csv_reader.h
+│   ├── helpers.h
+│   ├── pivot.h
+│   └── statistics.h
+├── src/
+│   ├── csv_reader.c
+│   ├── helpers.c
+│   ├── main.c
+│   ├── pivot.c
+│   └── statistics.c
+├── dados/
 ├── Makefile
-└── .gitignore
+├── README.md
+└── USAGE.md
 ```
+
+## Principais módulos
+
+### `csv_reader`
+
+- Estruturas `StudentRecord` e `CSVData`
+- Leitura do CSV EAMES com normalização de nota decimal
+- Suporte aos formatos de cabeçalho usados nas avaliações
+- Funções: `csv_create`, `csv_read`, `csv_add_record`, `csv_count`, `csv_print`, `csv_free`
+
+### `helpers`
+
+- Carregamento por ano (`load_year_data`)
+- Merge de dados (`merge_csv_data`)
+- Parse de argumento de ano (`parse_year_argument`)
+- Funções auxiliares de média/desvio e extração de coluna
+
+### `pivot`
+
+- Geração de pivot por aluno/ano (`pivot_from_csv`)
+- Preenchimento das colunas `AV1`, `AV2`, `TRABALHO`, `AV3`, `AV4`
+- Cálculo de `NF_MATI` e `NF_MATII`
+- Impressão opcional do pivot (`pivot_print`)
+
+### `statistics`
+
+- `stats_correlation_av1_nf_matii`: correlação de Pearson
+- `stats_classify_correlation`: classificação por intensidade
+	- `|r| < 0.3` -> `fraca`
+	- `0.3 <= |r| < 0.6` -> `moderada`
+	- `0.6 <= |r| < 0.9` -> `forte`
+	- `|r| >= 0.9` -> `muito forte`
 
 ## Compilação
 
 ```bash
-make           # Compila o programa
-make clean     # Remove objetos compilados
-make run       # Executa o programa
-make all       # Compila tudo
+make
+make clean
+make run
+make help
 ```
 
-## Uso
+## Execução
 
 ```bash
-./analise_dados <arquivo_csv>
+./analise_dados [ANOS]
 ```
 
-## Módulos
+Exemplos:
 
-### csv_reader
-Responsável pela leitura de arquivos CSV no formato EAMES, com suporte a:
-- Detecção automática de áreas (A1, A2, E1, etc)
-- Parsing de cabeçalhos por área
-- Leitura de notas por avaliação (AV1, AV2, Trabalho, AV3, AV4)
+```bash
+./analise_dados
+./analise_dados 2022
+./analise_dados 2020,2022,2024
+./analise_dados 2020-2023
+```
 
-### statistics
-Cálculos estatísticos:
-- Média aritmética
-- Desvio padrão
-- Mínimo e máximo
-- Quantis
+## Saída esperada (resumo)
 
-### correlation
-Análise de correlação:
-- Correlação de Pearson
-- P-value para significância estatística
-- Análise por ano e por área
+- Lista de anos analisados
+- Para cada avaliação de cada ano:
+	- nome da avaliação
+	- total de registros lidos
+- Total consolidado de registros
+- Bloco de correlação AV1 x NF_MATII com valor, pares válidos e classificação
 
-### output
-Geração de arquivos de resultado:
-- CSV para análises
-- Dados normalizados para visualização
-- Logs de execução
+## Requisitos
 
-## Dependências
-
-- C99 ou superior
-- Make
-- GCC ou Clang
-
-## Status
-
-Projeto em desenvolvimento.
+- GCC com suporte a C99
+- `make`
+- Sistema com suporte a terminal UTF-8 (recomendado)
