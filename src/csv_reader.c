@@ -250,6 +250,7 @@ CSVData* csv_read(const char *filename, int ano, const char *avaliacao) {
         //     strstr(upper_line, "PROVA")) {
         int has_num_col = (strstr(upper_line, "NO") != NULL) ||
                           (strstr(upper_line, "NUM") != NULL) ||
+                          (strstr(upper_line, "Nº") != NULL) ||
                           (upper_line[0] == 'N' && strchr(upper_line, ',') != NULL);
         int has_grade_col = (strstr(upper_line, "NOTA") != NULL) ||
                             (strstr(upper_line, "PROVA") != NULL) ||
@@ -264,9 +265,14 @@ CSVData* csv_read(const char *filename, int ano, const char *avaliacao) {
         }
         
         // Se estamos lendo dados
-        if (reading_data && strchr(trimmed, ',')) {
+        if ((reading_data && strchr(trimmed, ',')) || (line_num == 1)) {
             // Verifica se é nova seção de pelotão (tem padrão A1/E2/M3 e PEL/CIA)
             if (strstr(trimmed, "PEL") || strstr(trimmed, "CIA")) {
+                // Remove vírgulas no final do nome do pelotão, se houver
+                char *comma_pos = strchr(trimmed, ',');
+                if (comma_pos) {
+                    *comma_pos = '\0';
+                }
                 strcpy(pelotao, trimmed);
                 reading_data = 0;
                 continue;
