@@ -6,15 +6,18 @@
  * Estrutura de mapeamento de áreas
  */
 typedef struct {
-    char prefix;
+    char prefix[16];  // Prefixo para identificação (ex: "A", "E", "M", "ELET")
     char area[MAX_AREA];
 } AreaMapping;
 
 static AreaMapping area_map[] = {
-    {'A', "APOIO"},
-    {'E', "ELETROELETRÔNICA"},
-    {'M', "ELETROMECÂNICA"},
-    {0, ""}
+    {"A", "APOIO"},
+    {"APOIO", "APOIO"},
+    {"E", "ELETROELETRÔNICA"},
+    {"ELET", "ELETROELETRÔNICA"},
+    {"M", "ELETROMECÂNICA"},
+    {"ELMEC", "ELETROMECÂNICA"},
+    {"0", ""}
 };
 
 /**
@@ -71,8 +74,28 @@ static void extract_area_from_numero(const char *numero, char *area) {
     
     char prefix = toupper(numero[0]);
     
-    for (int i = 0; area_map[i].prefix != 0; i++) {
-        if (area_map[i].prefix == prefix) {
+    // for (int i = 0; area_map[i].prefix != 0; i++) {
+    for (int i = 0; strcmp(area_map[i].prefix, "0") != 0; i++) {
+        // if (area_map[i].prefix == prefix) {
+        if (strcmp(area_map[i].prefix, &prefix) == 0) {
+            strcpy(area, area_map[i].area);
+            return;
+        }
+    }
+}
+
+/**
+ * Fixa o nome correto da área
+ */
+static void fix_area_name(char *area) {
+    if (!area) return;
+    
+    char upper_area[MAX_AREA];
+    strcpy(upper_area, area);
+    strtoupper_custom(upper_area);
+    
+    for (int i = 0; strcmp(area_map[i].prefix, "0") != 0; i++) {
+        if (strcmp(upper_area, area_map[i].prefix) == 0) {
             strcpy(area, area_map[i].area);
             return;
         }
@@ -278,8 +301,10 @@ CSVData* csv_read(const char *filename, int ano, const char *avaliacao) {
                     record.nota = parse_nota(p1);
                 }
                 // Se primeira coluna é só letra (A, E, M), é a área
-                else if (strlen(p0) == 1 && isalpha(p0[0]) && num_parts >= 3) {
+                else if ((strlen(p0) == 1 && isalpha(p0[0]) && num_parts >= 3) ||
+                        (strlen(p0) > 1 && isalpha(p0[1])) ) {
                     strcpy(record.area, p0);
+                    fix_area_name(record.area);
                     strcpy(record.numero, p1);
                     record.nota = parse_nota(trim(parts[2]));
                 }
