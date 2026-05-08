@@ -17,7 +17,7 @@ static AreaMapping area_map[] = {
     {"ELET", "ELETROELETRÔNICA"},
     {"M", "ELETROMECÂNICA"},
     {"ELMEC", "ELETROMECÂNICA"},
-    {"0", ""}
+    {"0", "0"}  // Marca de término
 };
 
 /**
