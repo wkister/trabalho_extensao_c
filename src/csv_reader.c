@@ -267,7 +267,10 @@ CSVData* csv_read(const char *filename, int ano, const char *avaliacao) {
         // Se estamos lendo dados
         if ((reading_data && strchr(trimmed, ',')) || (line_num == 1)) {
             // Verifica se é nova seção de pelotão (tem padrão A1/E2/M3 e PEL/CIA)
-            if (strstr(trimmed, "PEL") || strstr(trimmed, "CIA")) {
+            if (strstr(trimmed, "PEL") || strstr(trimmed, "CIA") ||
+                strstr(trimmed, "ELETROELETRÔNICA") || 
+                strstr(trimmed, "APOIO") ||
+                strstr(trimmed, "ELETROMECÂNICA") ){
                 // Remove vírgulas no final do nome do pelotão, se houver
                 char *comma_pos = strchr(trimmed, ',');
                 if (comma_pos) {
