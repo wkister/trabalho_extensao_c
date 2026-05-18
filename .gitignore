@@ -12,3 +12,7 @@ dist/
 *.dSYM/
 .vscode/
 .idea/
+
+# Ignore programas compilados chamados 'cliente' e 'servidor' em qualquer pasta
+cliente
+servidor
