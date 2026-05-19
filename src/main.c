@@ -66,7 +66,7 @@ int main(int argc, char *argv[]) {
     int total_records = 0;
     for (int i = 0; i < years_count; i++) {
         int loaded = load_year_data(years[i], all_data);
-        printf("Ano %d: %d registros carregados\n", years[i], loaded);
+        // printf("Ano %d: %d registros carregados\n", years[i], loaded);
         total_records += loaded;
     }
     
@@ -81,7 +81,7 @@ int main(int argc, char *argv[]) {
 
         PivotTable *pivot = pivot_from_csv(all_data);
         if (pivot) {
-            // pivot_print(pivot, 0);
+            pivot_print(pivot, 20);
 
             double corr_av1_nf_matii = 0.0;
             int pairs = 0;

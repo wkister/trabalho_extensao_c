@@ -16,11 +16,11 @@ int load_year_data(int year, CSVData *output) {
     
     for (int i = 0; i < AVALIACOES_COUNT; i++) {
         snprintf(filepath, sizeof(filepath), "dados/%d/%s.csv", year, avaliacoes[i]);
-        printf("Lendo avaliação '%s' (%s)...\n", avaliacoes[i], filepath);
+        // printf("Lendo avaliação '%s' (%s)...\n", avaliacoes[i], filepath);
 
         CSVData *year_data = csv_read(filepath, year, avaliacoes[i]);
         if (year_data && year_data->count > 0) {
-            printf(" -> %d registros lidos\n", csv_count(year_data));
+            // printf(" -> %d registros lidos\n", csv_count(year_data));
             total_loaded += merge_csv_data(output, year_data);
             csv_free(year_data);
         } else {
